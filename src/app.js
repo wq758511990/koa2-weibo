@@ -20,6 +20,7 @@ app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
 
+// 注册ejs， 路由中可以通过ejs的文件名直接找到/views下的ejs
 app.use(views(__dirname + '/views', {
   extension: 'ejs'
 }))
