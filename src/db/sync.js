@@ -5,16 +5,17 @@
 
 const seq = require('./seq')
 
-// require('./model')
+require('./model/index')
 
+// 测试连接
 seq.authenticate().then(() => {
   console.log('auth ok')
-}).catch(e => {
-  console.log('auth err', e)
+}).catch(() => {
+  console.log('auth err')
 })
-// 执行同步
 
+// 执行同步
 seq.sync({ force: true }).then(() => {
-  console.log('同步成功')
-  process.exit() // 退出
+  console.log('sync ok')
+  process.exit()
 })

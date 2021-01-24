@@ -9,10 +9,13 @@ const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
 const { REDIS_CONF } = require('./config/db')
 const { isProd } = require('./utils/env')
+const { SESSION_SECRET_KEY } = require('./config/secretKeys')
 
+// 路由
 const errorViewRouter = require('./routes/view/error')
+const userViewRuoter = require('./routes/view/users')
+const userAPIRouter = require('./routes/api/user')
 const index = require('./routes/index')
-const users = require('./routes/users')
 
 let onerrorConf = {}
 if (isProd) {
@@ -37,7 +40,7 @@ app.use(views(__dirname + '/views', {
 }))
 
 // session 配置
-app.keys = ['UIsd_fasdfxcv87#']
+app.keys = [SESSION_SECRET_KEY]
 app.use(session({
   key: 'weibo.sid', // cookie name 默认是koa.sid
   prefix: 'weibo:sess', // redis key 前缀 默认是koa:sess:
@@ -55,7 +58,10 @@ app.use(session({
 
 // routes
 app.use(index.routes(), index.allowedMethods())
-app.use(users.routes(), users.allowedMethods())
+app.use(userViewRuoter.routes(), userViewRuoter.allowedMethods())
+app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
+
+// 404 路由放至最后
 app.use(errorViewRouter.routes(), errorViewRouter.allowedMethods())
 
 // error-handling
