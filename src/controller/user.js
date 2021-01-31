@@ -3,9 +3,9 @@
  * @author wzx
  */
 
-const { getUserInfo, createUser } = require('../services/user')
+const { getUserInfo, createUser, deleteUser } = require('../services/user')
 const { SuccessModel, ErrorModel } = require('../model/ResModel')
-const { registerUserNameNotExistInfo, registerUserNameExistInfo, registerFailInfo, loginFailInfo } = require('../model/ErrorInfo')
+const { registerUserNameNotExistInfo, registerUserNameExistInfo, registerFailInfo, loginFailInfo, deleteUserFailInfo } = require('../model/ErrorInfo')
 const doCrypto = require('../utils/cryp')
 /**
  * 用户名是否存在
@@ -68,8 +68,22 @@ async function login (ctx, userName, password) {
   return new SuccessModel()
 }
 
+/**
+ * 删除当前用户
+ * @param {string} userName 
+ */
+async function deleteCurUser (userName) {
+  const result = await deleteUser(userName)
+  if (result) {
+    // 成功
+    return new SuccessModel()
+  }
+  return new ErrorModel(deleteUserFailInfo)
+}
+
 module.exports = {
   isExists,
   register,
-  login
+  login,
+  deleteCurUser
 }

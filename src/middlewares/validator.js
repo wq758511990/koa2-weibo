@@ -19,7 +19,7 @@ function genValidator (validateFn) {
       ctx.body = new ErrorModel(jsonSchemaFileInfo)
     }
     // 验证成功
-    next()
+    await next()
   }
   return validator
 }
