@@ -1,3 +1,4 @@
+const path = require('path')
 const Koa = require('koa')
 const app = new Koa()
 const views = require('koa-views')
@@ -10,11 +11,13 @@ const redisStore = require('koa-redis')
 const { REDIS_CONF } = require('./config/db')
 const { isProd } = require('./utils/env')
 const { SESSION_SECRET_KEY } = require('./config/secretKeys')
+const koaStatic = require('koa-static')
 
 // 路由
 const errorViewRouter = require('./routes/view/error')
 const userViewRuoter = require('./routes/view/users')
 const userAPIRouter = require('./routes/api/user')
+const utilsAPIRouter = require('./routes/api/utils')
 const index = require('./routes/index')
 
 let onerrorConf = {}
@@ -32,7 +35,8 @@ app.use(bodyparser({
 }))
 app.use(json())
 app.use(logger())
-app.use(require('koa-static')(__dirname + '/public'))
+app.use(koaStatic(__dirname + '/public'))
+app.use(koaStatic(path.join(__dirname, '..', 'uploadFiles')))
 
 // 注册ejs， 路由中可以通过ejs的文件名直接找到/views下的ejs
 app.use(views(__dirname + '/views', {
@@ -58,6 +62,7 @@ app.use(session({
 
 // routes
 app.use(index.routes(), index.allowedMethods())
+app.use(utilsAPIRouter.routes(), utilsAPIRouter.allowedMethods())
 app.use(userViewRuoter.routes(), userViewRuoter.allowedMethods())
 app.use(userAPIRouter.routes(), userAPIRouter.allowedMethods())
 
