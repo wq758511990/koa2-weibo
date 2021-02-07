@@ -11,6 +11,9 @@ const { saveFile } = require('../../controller/utils')
 
 router.post('/upload', loginCheck, koaForm(), async (ctx, next) => {
   const file = ctx.req.files['file']
+  if (!file) {
+    return
+  }
   const { size, path, name, type } = file
   // controller
   ctx.body = await saveFile({
