@@ -2,7 +2,7 @@
  * @description 首页 controller
  * @author wzx
  */
-
+const xss = require('xss')
 const { ErrorModel, SuccessModel } = require('../model/ResModel')
 const { createBlogFailInfo } = require('../model/ErrorInfo')
 const { createBlog } = require('../services/blog')
@@ -15,7 +15,7 @@ const { createBlog } = require('../services/blog')
 async function create ({ userId, content, image }) {
   // service
   try {
-    const blog = await createBlog({ userId, content, image })
+    const blog = await createBlog({ userId, content: xss(content), image })
     return new SuccessModel(blog)
   } catch (error) {
     return new ErrorModel(createBlogFailInfo)
