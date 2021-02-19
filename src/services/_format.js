@@ -4,6 +4,7 @@
  */
 
 const { DEFAULT_USERAVATAR } = require('../config/constant')
+const { timeFormat } = require('../utils/dt')
 
 /**
  * 用户默认头像
@@ -32,6 +33,32 @@ function formatUser (list) {
   return _formatUserAvatar(list)
 }
 
+/**
+ * 格式化数据库时间
+ * @param {Object} obj 微博数据 
+ */
+function _formatDBTime (obj) {
+  obj.createdAtFormat = timeFormat(obj.createdAt)
+  obj.updatedAtFormat = timeFormat(obj.updatedAt)
+  return obj
+}
+
+/**
+ * 格式化微博信息
+ * @param {Array  | Object} list 微博列表或者单个微博
+ */
+function formatBlog (list) {
+  if (list === null) {
+    return list
+  }
+  if (list instanceof Array) {
+    // 数组
+    return list.map(blog => _formatDBTime(blog))
+  }
+  return _formatDBTime(list)
+}
+
 module.exports = {
-  formatUser
+  formatUser,
+  formatBlog
 }

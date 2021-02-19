@@ -4,5 +4,6 @@
  */
 
 module.exports = {
-  DEFAULT_USERAVATAR: 'http://pic.616pic.com/ys_img/00/10/83/ziP6ycYG5d.jpg'
+  DEFAULT_USERAVATAR: 'http://pic.616pic.com/ys_img/00/10/83/ziP6ycYG5d.jpg',
+  PAGE_SIZE: 5
 }
