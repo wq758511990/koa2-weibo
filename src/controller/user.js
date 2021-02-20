@@ -17,7 +17,7 @@ async function isExists (userName) {
   const userInfo = await getUserInfo(userName)
   if (userInfo) {
     // 存在
-    return new SuccessModel()
+    return new SuccessModel(userInfo)
   } else {
     // 不存在用户名
     return new ErrorModel(registerUserNameNotExistInfo)
