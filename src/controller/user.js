@@ -63,7 +63,6 @@ async function login (ctx, userName, password) {
   }
   // 登陆成功
   if (!ctx.session.userInfo) {
-    console.log('null in')
     ctx.session.userInfo = userInfo
   }
   return new SuccessModel()

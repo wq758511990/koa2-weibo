@@ -7,7 +7,7 @@ const redis = require('redis')
 const { REDIS_CONF } = require('../config/db')
 
 // 创建客户端
-const redisClient = redis.createClient(REDIS_CONF.port, REDIS_CONF.host, REDIS_CONF.password)
+const redisClient = redis.createClient(REDIS_CONF.port, REDIS_CONF.host, { password: '123456' })
 
 redisClient.on('error', err => {
   console.error('redis error', err)
