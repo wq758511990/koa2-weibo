@@ -3,7 +3,7 @@
  * @author wzx
  */
 
-const { DEFAULT_USERAVATAR } = require('../config/constant')
+const { DEFAULT_USERAVATAR, REG_FOR_AT_WHO } = require('../config/constant')
 const { timeFormat } = require('../utils/dt')
 
 /**
@@ -53,9 +53,31 @@ function formatBlog (list) {
   }
   if (list instanceof Array) {
     // 数组
-    return list.map(blog => _formatDBTime(blog))
+    return list.map(_formatDBTime).map(_formatContent)
   }
-  return _formatDBTime(list)
+  let result = list
+  result = _formatDBTime(list)
+  result = _formatContent(result)
+  return result
+}
+
+/**
+ * 格式化微博内容
+ * @param {Object} obj 微博数据对象
+ */
+function _formatContent (obj) {
+  obj.contentFormat = obj.content
+
+  // 格式化@
+  obj.contentFormat = obj.contentFormat.replace(
+    REG_FOR_AT_WHO,
+    // 1-匹配到的字符串， 2、3- 正则表达式的括号里的内容
+    (matchStr, nickName, userName) => {
+      return `<a href="/profile/${userName}">@${nickName}</a>`
+    }
+  )
+
+  return obj
 }
 
 module.exports = {
