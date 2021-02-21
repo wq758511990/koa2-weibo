@@ -6,6 +6,7 @@
 
 const router = require('koa-router')()
 
+const { getAtMeCount } = require('../../controller/blog-at')
 const { getHomeBlogList } = require('../../controller/blog-home')
 const { getProfileBlogList } = require('../../controller/blog-profile')
 const { getSquareBlogList } = require('../../controller/blog-square')
@@ -14,6 +15,7 @@ const { getFans, getFollowers } = require('../../controller/user-relation')
 const { loginRedirect } = require('../../middlewares/loginChecks')
 
 router.get('/', loginRedirect, async (ctx, next) => {
+
   const userInfo = ctx.session.userInfo
   const { id: userId } = userInfo
 
@@ -28,8 +30,12 @@ router.get('/', loginRedirect, async (ctx, next) => {
   const followersResult = await getFollowers(userId)
   const { count: followersCount, followersList } = followersResult.data
 
+  // 获取 @ 数量
+  const atCountResult = await getAtMeCount(userId)
+  const { count: atCount } = atCountResult.data
   await ctx.render('index', {
     userData: {
+      atCount,
       userInfo,
       fansData: {
         count: fansCount,
@@ -88,6 +94,10 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
   // controller
   const followersResult = await getFollowers(curUserInfo.id)
   const { count: followersCount, followersList } = followersResult.data
+
+  const atCountResult = await getAtMeCount(myUserInfo.id)
+  const { count: atCount } = atCountResult.data
+
   // 我是否关注此人
   const amIFollowed = fansList.some(item => {
     return item.userName === myUserName
@@ -97,6 +107,7 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
       ...result.data
     },
     userData: {
+      atCount,
       userInfo: curUserInfo,
       isMe,
       fansData: {
