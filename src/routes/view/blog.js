@@ -6,7 +6,7 @@
 
 const router = require('koa-router')()
 
-const { getAtMeCount } = require('../../controller/blog-at')
+const { getAtMeCount, getAtMeBlogList } = require('../../controller/blog-at')
 const { getHomeBlogList } = require('../../controller/blog-home')
 const { getProfileBlogList } = require('../../controller/blog-profile')
 const { getSquareBlogList } = require('../../controller/blog-square')
@@ -132,5 +132,27 @@ router.get('/square', loginRedirect, async (ctx, next) => {
       ...result.data
     }
   })
+})
+
+// atMe 路由
+router.get('/at-me', loginRedirect, async (ctx, next) => {
+  // 获取 @ 数量
+  const { id: userId } = ctx.session.userInfo
+  const atCountResult = await getAtMeCount(userId)
+  const { count: atCount } = atCountResult.data
+  // 获取第一页列表
+  const result = await getAtMeBlogList(userId)
+  // 渲染
+  await ctx.render('atMe', {
+    atCount,
+    blogData: {
+      ...result.data
+    }
+  })
+
+  // 标记为已读
+  if (atCount > 0) {
+
+  }
 })
 module.exports = router
