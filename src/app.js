@@ -11,6 +11,7 @@ const redisStore = require('koa-redis')
 const { REDIS_CONF } = require('./config/db')
 const { isProd } = require('./utils/env')
 const { SESSION_SECRET_KEY } = require('./config/secretKeys')
+const cors = require('koa2-cors')
 const koaStatic = require('koa-static')
 
 // 路由
@@ -32,6 +33,9 @@ if (isProd) {
 }
 // error handler
 onerror(app, onerrorConf)
+
+// CORS
+app.use(cors())
 
 // middlewares
 app.use(bodyparser({
